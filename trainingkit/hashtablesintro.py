@@ -7,6 +7,10 @@ def my_hash(s):
     total = 0
     for b in s_bytes:
         total += b
+    # to make DJB2 hash correct, add this to last line of the loop
+    total &= 0xffffffff #32-bit
+    # to make FNV-1 hash correct, add this to last line of the loop
+    # total &= 0xffffffffffffffff #64-bit
     return total
 
 def hash_index(s):
