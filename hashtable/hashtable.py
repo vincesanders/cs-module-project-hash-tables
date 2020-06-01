@@ -61,8 +61,13 @@ class HashTable:
 
         Implement this, and/or DJB2.
         """
-
-        # Your code here
+        hash = 14695981039346656037
+        prime = 1099511628211
+        size = 2**64
+        for c in key:
+            hash = (hash * prime) % size
+            hash = hash ^ ord(c)
+        return hash
 
 
     def djb2(self, key):
