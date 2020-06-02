@@ -22,7 +22,16 @@ class HashTable:
 
     def __init__(self, capacity):
         # Your code here
+        self.capacity = capacity
+        self.storage = []
+        for i in range(capacity):
+            self.storage.append(HashTableEntry(i, None))
 
+    def __str__(self):
+        return_str = '['
+        for i in range(self.capacity - 1):
+            return_str += f'{self.storage[i].value}, '
+        return return_str + f'{self.storage[self.capacity - 1].value}]'
 
     def get_num_slots(self):
         """
@@ -34,7 +43,7 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        return self.capacity
 
 
     def get_load_factor(self):
@@ -62,7 +71,12 @@ class HashTable:
 
         Implement this, and/or FNV-1.
         """
-        # Your code here
+        hash = 5381
+        for c in key:
+            # <<5 shife bits left by 5 ex: 00000001 => 00100000
+            # hash = (( hash << 5) + hash) + ord(c)
+            hash = hash * 33 + ord(c)
+        return hash & 0xFFFFFFFF
 
 
     def hash_index(self, key):
@@ -81,7 +95,8 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        index = self.hash_index(key)
+        self.storage[index].value = value
 
 
     def delete(self, key):
@@ -92,7 +107,10 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        index = self.hash_index(key)
+        value = self.storage[index].value
+        self.storage[index].value = None
+        return value
 
 
     def get(self, key):
@@ -103,7 +121,8 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        index = self.hash_index(key)
+        return self.storage[index].value
 
 
     def resize(self, new_capacity):
@@ -120,34 +139,39 @@ class HashTable:
 if __name__ == "__main__":
     ht = HashTable(8)
 
-    ht.put("line_1", "'Twas brillig, and the slithy toves")
-    ht.put("line_2", "Did gyre and gimble in the wabe:")
-    ht.put("line_3", "All mimsy were the borogoves,")
-    ht.put("line_4", "And the mome raths outgrabe.")
-    ht.put("line_5", '"Beware the Jabberwock, my son!')
-    ht.put("line_6", "The jaws that bite, the claws that catch!")
-    ht.put("line_7", "Beware the Jubjub bird, and shun")
-    ht.put("line_8", 'The frumious Bandersnatch!"')
-    ht.put("line_9", "He took his vorpal sword in hand;")
-    ht.put("line_10", "Long time the manxome foe he sought--")
-    ht.put("line_11", "So rested he by the Tumtum tree")
-    ht.put("line_12", "And stood awhile in thought.")
+    print(ht)
 
-    print("")
+    print(ht.djb2('xz'))
+    print(ht.djb2('xy'))
 
-    # Test storing beyond capacity
-    for i in range(1, 13):
-        print(ht.get(f"line_{i}"))
+    # ht.put("line_1", "'Twas brillig, and the slithy toves")
+    # ht.put("line_2", "Did gyre and gimble in the wabe:")
+    # ht.put("line_3", "All mimsy were the borogoves,")
+    # ht.put("line_4", "And the mome raths outgrabe.")
+    # ht.put("line_5", '"Beware the Jabberwock, my son!')
+    # ht.put("line_6", "The jaws that bite, the claws that catch!")
+    # ht.put("line_7", "Beware the Jubjub bird, and shun")
+    # ht.put("line_8", 'The frumious Bandersnatch!"')
+    # ht.put("line_9", "He took his vorpal sword in hand;")
+    # ht.put("line_10", "Long time the manxome foe he sought--")
+    # ht.put("line_11", "So rested he by the Tumtum tree")
+    # ht.put("line_12", "And stood awhile in thought.")
 
-    # Test resizing
-    old_capacity = ht.get_num_slots()
-    ht.resize(ht.capacity * 2)
-    new_capacity = ht.get_num_slots()
+    # print("")
 
-    print(f"\nResized from {old_capacity} to {new_capacity}.\n")
+    # # Test storing beyond capacity
+    # for i in range(1, 13):
+    #     print(ht.get(f"line_{i}"))
 
-    # Test if data intact after resizing
-    for i in range(1, 13):
-        print(ht.get(f"line_{i}"))
+    # # Test resizing
+    # old_capacity = ht.get_num_slots()
+    # ht.resize(ht.capacity * 2)
+    # new_capacity = ht.get_num_slots()
 
-    print("")
+    # print(f"\nResized from {old_capacity} to {new_capacity}.\n")
+
+    # # Test if data intact after resizing
+    # for i in range(1, 13):
+    #     print(ht.get(f"line_{i}"))
+
+    # print("")
