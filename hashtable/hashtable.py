@@ -1,3 +1,4 @@
+import math
 class Node:
     def __init__(self,key=None, value=None):
         self.key = key
@@ -51,6 +52,16 @@ class HashTableEntry:
             current = current.next
         return None
 
+    def insert(self, key, value):
+        current = self.head
+        while current is not None:
+            if current.key == key:
+                current.value = value
+                return current
+            current = current.next
+        # if key is not present in list, add to head
+        self.add_to_head(key, value)
+
     def delete(self, key):
         current = self.head
         if current.key == key: #the head is to be deleted
@@ -83,6 +94,7 @@ class HashTable:
         # Your code here
         self.capacity = capacity
         self.storage = []
+        self.load = 0
         for _ in range(capacity):
             self.storage.append(HashTableEntry(None, None))
 
@@ -111,7 +123,7 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        return self.load / self.capacity
 
 
     def fnv1(self, key):
@@ -159,8 +171,13 @@ class HashTable:
 
         Implement this.
         """
+        self.load += 1
+        # check load factor
+        if self.get_load_factor() > 0.7:
+            # if above 0.7, resize to double capacity
+            self.resize(self.capacity * 2)
         index = self.hash_index(key)
-        self.storage[index].add_to_head(key, value)
+        self.storage[index].insert(key, value)
 
 
     def delete(self, key):
@@ -171,6 +188,11 @@ class HashTable:
 
         Implement this.
         """
+        self.load -= 1
+        # check load factor
+        if self.get_load_factor() < 0.2:
+            # if below 0.2, resize to half capacity
+            self.resize(math.ceil(self.capacity / 2))
         index = self.hash_index(key)
         return self.storage[index].delete(key)
 
@@ -207,6 +229,7 @@ class HashTable:
         # make old hashtable = new hashtable
         self.capacity = new_hashtable.capacity
         self.storage = new_hashtable.storage
+        self.load = new_hashtable.load
 
 
 
@@ -220,30 +243,44 @@ if __name__ == "__main__":
     print(ht.djb2('xy'))
 
     ht.put("key-0", "val-0")
+    print(ht.get_load_factor())
     ht.put("key-1", "val-1")
+    print(ht.get_load_factor())
     ht.put("key-2", "val-2")
+    print(ht.get_load_factor())
     ht.put("key-3", "val-3")
+    print(ht.get_load_factor())
     ht.put("key-4", "val-4")
+    print(ht.get_load_factor())
     ht.put("key-5", "val-5")
+    print(ht.get_load_factor())
     ht.put("key-6", "val-6")
+    print(ht.get_load_factor())
     ht.put("key-7", "val-7")
+    print(ht.get_load_factor())
     ht.put("key-8", "val-8")
+    print(ht.get_load_factor())
+    ht.put("key-9", "val-9")
+
+    ht.put("key-0", "new-val-0")
 
     print(ht)
+
+    print(ht.get('key-0'))
 
     # ht.delete("key-2")
     # print(ht)
     # ht.delete("key-1")
     # print(ht)
-    ht.delete("key-0")
-    print(ht)
+    # ht.delete("key-0")
+    # print(ht)
 
-    print(ht.get_num_slots())
+    # print(ht.get_num_slots())
 
-    ht.resize(16)
+    # ht.resize(16)
 
-    print(ht.get_num_slots())
-    print(ht)
+    # print(ht.get_num_slots())
+    # print(ht)
 
     # print(ht)
 
