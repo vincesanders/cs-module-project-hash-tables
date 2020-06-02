@@ -83,7 +83,7 @@ class HashTable:
         # Your code here
         self.capacity = capacity
         self.storage = []
-        for i in range(capacity):
+        for _ in range(capacity):
             self.storage.append(HashTableEntry(None, None))
 
     def __str__(self):
@@ -194,7 +194,20 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        # create a new hashtable
+        new_hashtable = HashTable(new_capacity)
+        # add values from old hashtable to new hashtable
+        for hte in self.storage:
+            # loop through values of hte (linked list)
+            current = hte.head
+            while current is not None:
+                # add each value to new hashtable
+                new_hashtable.put(current.key, current.value)
+                current = current.next
+        # make old hashtable = new hashtable
+        self.capacity = new_hashtable.capacity
+        self.storage = new_hashtable.storage
+
 
 
 
@@ -223,6 +236,13 @@ if __name__ == "__main__":
     # ht.delete("key-1")
     # print(ht)
     ht.delete("key-0")
+    print(ht)
+
+    print(ht.get_num_slots())
+
+    ht.resize(16)
+
+    print(ht.get_num_slots())
     print(ht)
 
     # print(ht)
