@@ -1,11 +1,70 @@
+class Node:
+    def __init__(self,key=None, value=None):
+        self.key = key
+        self.value = value
+        self.next = None
+
 class HashTableEntry:
     """
     Linked List hash table key/value pair
     """
-    def __init__(self, key, value):
-        self.key = key
-        self.value = value
-        self.next = None
+    def __init__(self, key=None, value=None):
+        if value is None:
+            self.head = None
+        else:
+            self.head = Node(key, value)
+
+    def __str__(self):
+        return_string = '['
+        if self.head is None:
+            return return_string + 'None]'
+        current = self.head
+        while current.next is not None:
+            return_string += f'({current.key}: {current.value}), '
+            current = current.next
+        return return_string + f'({current.key}: {current.value})' + ']'
+
+    #returns the new head
+    def add_to_head(self, key, value):
+        if self.head is None:
+            self.head = Node(key, value)
+        else:
+            node = Node(key, value)
+            node.next = self.head
+            self.head = node
+        return self.head
+
+    def find_by_value(self, value):
+        current = self.head
+        while current is not None:
+            if current.value == value:
+                return current
+            current = current.next
+        return None
+
+    # returns value
+    def find_by_key(self, key):
+        current = self.head
+        while current is not None:
+            if current.key == key:
+                return current.value
+            current = current.next
+        return None
+
+    def delete(self, key):
+        current = self.head
+        if current.key == key: #the head is to be deleted
+            value = current.value
+            self.head = current.next
+            return value
+        while current.next is not None:
+            if current.next.key == key:
+                #this is what we need to delete
+                value = current.next.value
+                current.next = current.next.next
+                return value
+            current = current.next
+        return None
 
 
 # Hash table can't have fewer than this many slots
@@ -25,13 +84,13 @@ class HashTable:
         self.capacity = capacity
         self.storage = []
         for i in range(capacity):
-            self.storage.append(HashTableEntry(i, None))
+            self.storage.append(HashTableEntry(None, None))
 
     def __str__(self):
         return_str = '['
         for i in range(self.capacity - 1):
-            return_str += f'{self.storage[i].value}, '
-        return return_str + f'{self.storage[self.capacity - 1].value}]'
+            return_str += f'{self.storage[i]}, '
+        return return_str + f'{self.storage[self.capacity - 1]}]'
 
     def get_num_slots(self):
         """
@@ -101,7 +160,7 @@ class HashTable:
         Implement this.
         """
         index = self.hash_index(key)
-        self.storage[index].value = value
+        self.storage[index].add_to_head(key, value)
 
 
     def delete(self, key):
@@ -113,9 +172,7 @@ class HashTable:
         Implement this.
         """
         index = self.hash_index(key)
-        value = self.storage[index].value
-        self.storage[index].value = None
-        return value
+        return self.storage[index].delete(key)
 
 
     def get(self, key):
@@ -127,7 +184,7 @@ class HashTable:
         Implement this.
         """
         index = self.hash_index(key)
-        return self.storage[index].value
+        return self.storage[index].find_by_key(key)
 
 
     def resize(self, new_capacity):
@@ -148,6 +205,27 @@ if __name__ == "__main__":
 
     print(ht.djb2('xz'))
     print(ht.djb2('xy'))
+
+    ht.put("key-0", "val-0")
+    ht.put("key-1", "val-1")
+    ht.put("key-2", "val-2")
+    ht.put("key-3", "val-3")
+    ht.put("key-4", "val-4")
+    ht.put("key-5", "val-5")
+    ht.put("key-6", "val-6")
+    ht.put("key-7", "val-7")
+    ht.put("key-8", "val-8")
+
+    print(ht)
+
+    # ht.delete("key-2")
+    # print(ht)
+    # ht.delete("key-1")
+    # print(ht)
+    ht.delete("key-0")
+    print(ht)
+
+    # print(ht)
 
     # ht.put("line_1", "'Twas brillig, and the slithy toves")
     # ht.put("line_2", "Did gyre and gimble in the wabe:")
