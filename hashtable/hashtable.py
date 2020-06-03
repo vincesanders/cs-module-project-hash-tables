@@ -10,7 +10,7 @@ class HashTableEntry:
     Linked List hash table key/value pair
     """
     def __init__(self, key=None, value=None):
-        if value is None:
+        if value is None: # validate both key and value entered
             self.head = None
         else:
             self.head = Node(key, value)
