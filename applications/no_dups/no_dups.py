@@ -1,5 +1,12 @@
 def no_dups(s):
-    # Your code here
+    arr = s.split(' ')
+    words = {}
+    for word in arr:
+        if word in words:
+            continue
+        else:
+            words[word] = True
+    return ' '.join(words)
 
 
 
