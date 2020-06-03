@@ -1,5 +1,4 @@
 def no_dups(s):
-    solution = []
     arr = s.split(' ')
     words = {}
     for word in arr:
@@ -7,7 +6,6 @@ def no_dups(s):
             continue
         else:
             words[word] = True
-            solution.append(word)
     return ' '.join(words)
 
 
