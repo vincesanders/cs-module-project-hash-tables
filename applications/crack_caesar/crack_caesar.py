@@ -3,7 +3,8 @@ import re
 # decode it.
 with open("applications/crack_caesar/ciphertext.txt") as f:
     file_text = f.read()
-words = re.sub(r'[^A-Za-z0-9 ]+', ' ', file_text)
+pattern = re.compile('[^A-Za-z0-9 ]+')
+words = re.sub(pattern, ' ', file_text)
 letters = [char for char in words]
 histogram = {}
 for letter in letters:
@@ -24,6 +25,9 @@ for letter in sorted(histogram.items(), key = lambda e: e[1], reverse=True):
 
 deciphered_string = ''
 for char in file_text:
+    if char == 'â':
+        deciphered_string += 'â'
+        continue
     if not char.isalpha():
         deciphered_string += char
         continue
