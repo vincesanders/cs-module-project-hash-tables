@@ -3,9 +3,9 @@ find all a, b, c, d in q such that
 f(a) + f(b) = f(c) - f(d)
 """
 
-q = set(range(1, 10))
+# q = set(range(1, 10))
 # q = set(range(1, 100))
-# q = (1, 3, 4, 7, 12)
+q = (1, 3, 4, 7, 12)
 
 
 def f(x):
@@ -16,7 +16,7 @@ calculations = {}
 additions = {}
 subtractions = {}
 
-for num1 in q:
+for num1 in q: # O(n^2)
     if num1 not in calculations:
         calculations[num1] = f(num1)
     for num2 in q:
@@ -25,17 +25,15 @@ for num1 in q:
         added = calculations[num1] + calculations[num2]
         subtracted = calculations[num1] - calculations[num2]
         if added in additions:
-            pass
             additions[added].append([num1, num2])
         else:
             additions[added] = [[num1, num2]]
         if subtracted in subtractions:
-            pass
             subtractions[subtracted].append([num1, num2])
         else:
             subtractions[subtracted] = [[num1, num2]]
 
-for calc in additions:
+for calc in additions: # O(n)
     if calc in subtractions:
         for i in range(len(additions[calc])):
             for j in range(len(subtractions[calc])):
